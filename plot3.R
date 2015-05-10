@@ -33,7 +33,7 @@ plot3 <- function(verbose=FALSE) {
     if (is.null(household_power$date_time)) {
         household_power$date_time <- as.POSIXct(paste(household_power[, 'Date'], 
                                                       household_power[, 'Time']),
-                                                format='%m/%d/%Y %H:%M:%S')
+                                                format='%d/%m/%Y %H:%M:%S')
         # reorder the columns, just because
         household_power <<- cbind(household_power[10], 
                                   household_power[3:9])
@@ -42,11 +42,13 @@ plot3 <- function(verbose=FALSE) {
     ## png call goes here
     png(file='rplot3.png')
     ##  note: killing the x-axis tick marks until I can figure out how to get day labels
-    plot(household_power$Sub_metering_1, type='s', ylim=c(0, 38), xaxt='n',
-         xlab='', ylab='Energy Sub Metering', col='black'
-         )
-    lines(household_power$Sub_metering_2, col='red')
-    lines(household_power$Sub_metering_3, col='blue')
+    plot(x=household_power$date_time, y=household_power$Sub_metering_1, 
+         type='s', ylim=c(0, 38), xlab='date_time', ylab='Energy Sub Metering', 
+         col='black')
+    lines(x=household_power$date_time, 
+          y=household_power$Sub_metering_2, col='red')
+    lines(x=household_power$date_time, 
+          y=household_power$Sub_metering_3, col='blue')
     legend('topright', legend=c('Sub Metering 1', 
                                 'Sub Metering 2',
                                 'Sub Metering 3'), 

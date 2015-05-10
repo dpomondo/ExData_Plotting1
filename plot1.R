@@ -2,6 +2,27 @@
 ## home: github.com/dpomondo/... {to be filled in  later}
 ##
 plot1 <- function(verbose=FALSE) {
+    ### Function creates a plot named 'plot1.png' in the current dir.
+    ###
+    ### Use: Called with 'verbose=T' to get detailed (?!) feedback.
+    ### Otherwise, the function will:
+    ###     1. determine if './data' exists, creating it if necessary
+    ###     2. determine if the unzipped csv file is present
+    ###         a. download the file if not present
+    ###         b. unzip after downloading
+    ###     3. determine if the 'household_power' data frame is already in memory
+    ###         a. import 'sqldf' -- note that this function WILL fail if 'sqldf' isn't installed
+    ###         b. read only those rows with '1/2'2007' or '2/2/2007' in the 'Date' col
+    ###         c. convert the 'Date' and 'Time' cols into a single 'POSIXct' class
+    ###         d. replace 'Date' and 'Time' cols withthe 'date_time' col
+    ###         e. store the cleaned 'household_power' data fram in the global
+    ###            environment, to speed up further calls, or calls of the 'plot[234].R' funcs
+    ###     4. make the appropriate plot and save it as a '.png' file
+    ### Note that the cleaned data frame is NOT saved/archived; later calls
+    ### will require reimporting and recleaning.
+    ###
+    ### Also, I'm tired and hungry, so I'm not going to yank/put these
+    ### comments into the 'plot[234].R' files. 
     targetfile <- './data/household_power_consumption.txt'
     ## First, we get the file in the right place!
     if (!file.exists('data')) {
@@ -34,7 +55,7 @@ plot1 <- function(verbose=FALSE) {
     if (is.null(household_power$date_time)) {
         household_power$date_time <- as.POSIXct(paste(household_power[, 'Date'], 
                                                       household_power[, 'Time']),
-                                                format='%m/%d/%Y %H:%M:%S')
+                                                format='%d/%m/%Y %H:%M:%S')
         # reorder the columns, just because
         household_power <<- cbind(household_power[10], 
                                   household_power[3:9])

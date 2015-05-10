@@ -1,7 +1,11 @@
 ## plot2.R
 ## home: github.com/dpomondo/... {to be filled in  later}
 ##
-plot2 <- function(verbose=FALSE) {
+plot2 <- function(png_print=TRUE, verbose=FALSE) {
+    ### Use: called with 'png_print=FALSE' will send the plot to the screen,
+    ### allowing for debugging and iterating the settings. Default behavior
+    ### is to save the plot as a '.png' file, same as 'plot[134].R' funcs
+    ###
     targetfile <- './data/household_power_consumption.txt'
     ## First, we get the file in the right place!
     if (!file.exists('data')) {
@@ -34,21 +38,25 @@ plot2 <- function(verbose=FALSE) {
         if (verbose==TRUE) {print("Fixing date/time classes...")}
         household_power$date_time <- as.POSIXct(paste(household_power[, 'Date'], 
                                                       household_power[, 'Time']),
-                                                format='%m/%d/%Y %H:%M:%S')
+                                                format='%d/%m/%Y %H:%M:%S')
         # reorder the columns, just because
         household_power <<- cbind(household_power[10], 
                                   household_power[3:9])
     }
     ## And finally make the plot!
     ## png call goes here
-    if (file.exists('rplot2.png')) {
-        if (verbose==TRUE) {print('Overwriting existsing file...')}
+    ##
+    ##adding flag to let PNG conversion be turned on or aff, for debugging
+    if (png_print==TRUE) {
+        if (file.exists('rplot2.png')) {
+            if (verbose==TRUE) {print('Overwriting existsing file...')}
+        }
+        png(file='rplot2.png')
     }
-    png(file='rplot2.png')
-    ##  note: killing the x-axis tick marks until I can figure out how to get day labels
-    plot(as.numeric(household_power$Global_active_power), type='s',
-         main='', xlab='', ylab='Global Active Power (kilowatts)'
-         , xaxt='n'
+    plot(x=household_power$date_time, y=household_power$Global_active_power, 
+         type='s', main='', xlab='datetime', ylab='Global Active Power (kilowatts)'
          )
+    if (png_print==TRUE) {
     dev.off()
+    }
 }

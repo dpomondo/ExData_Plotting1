@@ -33,7 +33,7 @@ plot4 <- function(verbose=FALSE) {
     if (is.null(household_power$date_time)) {
         household_power$date_time <- as.POSIXct(paste(household_power[, 'Date'], 
                                                       household_power[, 'Time']),
-                                                format='%m/%d/%Y %H:%M:%S')
+                                                format='%d/%m/%Y %H:%M:%S')
         # reorder the columns, just because
         household_power <<- cbind(household_power[10], 
                                   household_power[3:9])
@@ -44,18 +44,22 @@ plot4 <- function(verbose=FALSE) {
     ##  note: killing the x-axis tick marks until I can figure out how to get day labels
     par(mfrow=c(2, 2))
     ## plot for (1, 1)
-    plot(household_power$Global_active_power, type='s', 
-         xlab='datetime', xaxt='n', ylab='Global Active Power')
+    plot(x=household_power$date_time, y=household_power$Global_active_power, type='s', 
+         xlab='datetime', ylab='Global Active Power')
     ## plot for (1, 2)
-    plot(household_power$Voltage, type='s', xlab='datetime', xaxt='n', ylab='Voltage')
+    plot(x=household_power$date_time, y=household_power$Voltage, type='s', 
+         xlab='datetime', ylab='Voltage')
     ## plot for (2, 1)
-    plot(household_power$Sub_metering_1, ylim=c(0, 38), 
-         col='black', type='s', xlab='datetime', xaxt='n', ylab='Energy Sub Metering')
-    lines(household_power$Sub_metering_2, col='red')
-    lines(household_power$Sub_metering_3, col='blue')
+    plot(x=household_power$date_time,
+         y=household_power$Sub_metering_1, ylim=c(0, 38), 
+         col='black', type='s', xlab='datetime', ylab='Energy Sub Metering')
+    lines(x=household_power$date_time,
+          y=household_power$Sub_metering_2, col='red')
+    lines(x=household_power$date_time,
+          y=household_power$Sub_metering_3, col='blue')
     ## plot for (2, 2)
-    plot(household_power$Global_reactive_power, type='s', 
-         xlab='datetime', xaxt='n', ylab='Global Reactive Power')
+    plot(x=household_power$date_time, y=household_power$Global_reactive_power, 
+         type='s', xlab='datetime', ylab='Global Reactive Power')
     dev.off()
 }
 
